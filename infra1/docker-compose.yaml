@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - local-infra-net
+    environment:
+      # If there is an existing MongoDB, these are ignored.
+      # So change your admin/admin root user after database first run!
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      # - "5672:5672"
+    networks:
+      - local-infra-net
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.16.1
+    ports:
+      - "9200:9200"
+      # - "9300:9300"
+    networks:
+      - local-infra-net
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+
+  kibana:
+    container_name: kibana
+    image: kibana:7.16.1
+    ports:
+      - "5601:5601"
+    networks:
+      - local-infra-net
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+  logstash:
+    container_name: logstash
+    build:
+      context: ./logstash
+    volumes:
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+    networks:
+      - local-infra-net
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+
+networks:
+  local-infra-net:
+    driver: bridge
