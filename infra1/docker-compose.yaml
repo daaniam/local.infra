@@ -7,7 +7,7 @@ services:
     ports:
       - "27017:27017"
     networks:
-      - local-infra-net
+      - local-infra-net1
     environment:
       # If there is an existing MongoDB, these are ignored.
       # So change your admin/admin root user after database first run!
@@ -21,7 +21,7 @@ services:
       - "15672:15672"
       # - "5672:5672"
     networks:
-      - local-infra-net
+      - local-infra-net1
     environment:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: rabbit
@@ -33,11 +33,13 @@ services:
       - "9200:9200"
       # - "9300:9300"
     networks:
-      - local-infra-net
+      - local-infra-net1
     environment:
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
+      - xpack.security.authc.api_key.enabled=true
       - discovery.type=single-node
       - network.host=0.0.0.0
+      - ELASTIC_PASSWORD=elastic_password
 
   kibana:
     container_name: kibana
@@ -45,9 +47,11 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - local-infra-net
+      - local-infra-net1
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic_password
 
   logstash:
     container_name: logstash
@@ -56,11 +60,8 @@ services:
     volumes:
       - ./logstash/pipeline/:/usr/share/logstash/pipeline/
     networks:
-      - local-infra-net
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-
+      - local-infra-net1
 
 networks:
-  local-infra-net:
+  local-infra-net1:
     driver: bridge
