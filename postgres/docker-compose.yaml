@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: mydevuser
+      POSTGRES_PASSWORD: mysecretpassword123**
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - mydevnetwork
+
+volumes:
+  postgres:
+
+networks:
+ mydevnetwork:
+   external: true
+   name: mydevnetwork
