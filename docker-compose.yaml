@@ -1,0 +1,111 @@
+version: "3.8"
+# Following services are included:
+# - mongodb: MongoDB (exposed port: 27017)
+# - postgres: PostgresSQL (exposed port: 5432)
+# - pgAdmin4: pgAdmin4 (exposed port: 8000)
+# - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
+# - elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
+
+services:
+
+  # MongoDB
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - mydevnetwork
+    volumes:
+      - mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mydevuser
+      - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword123**
+
+  # Elasticsearch
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.16.1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - mydevnetwork
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - xpack.security.enabled=true
+      - xpack.security.authc.api_key.enabled=true
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+      - ELASTIC_PASSWORD=mysecretpassword123**
+
+  # Postgres
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: mydevuser
+      POSTGRES_PASSWORD: mysecretpassword123**
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - mydevnetwork
+
+  # pgAdmin4
+  pgAdmin4:
+    container_name: pgAdmin4
+    image: dpage/pgadmin4
+    ports:
+      - "8000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mydevuser@domain.com
+      PGADMIN_DEFAULT_PASSWORD: mysecretpassword123**
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    networks:
+      - mydevnetwork
+
+  # Kibana
+  kibana:
+    container_name: kibana
+    image: kibana:7.16.1
+    ports:
+      - "5601:5601"
+    networks:
+      - mydevnetwork
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=mysecretpassword123**
+
+  # RabbitMQ
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    restart: "unless-stopped"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: mydevuser
+      RABBITMQ_DEFAULT_PASS: mysecretpassword123**
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - mydevnetwork
+
+
+volumes:
+  mongodb:
+  elasticsearch:
+  postgres:
+  pgadmin:
+  rabbitmq:
+
+
+networks:
+ mydevnetwork:
+
