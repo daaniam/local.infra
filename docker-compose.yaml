@@ -41,7 +41,7 @@ services:
       - ELASTIC_PASSWORD=mysecretpassword123**
 
   # Elasticsearch
-  eslasticsearch-noauth:
+  elasticsearch-noauth:
     container_name: eslasticsearch-noauth
     image: elasticsearch:7.16.1
     ports:
