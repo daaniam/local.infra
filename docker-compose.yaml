@@ -2,7 +2,7 @@ version: "3.8"
 # Following services are included:
 # - mongodb: MongoDB (exposed port: 27017)
 # - postgres: PostgresSQL (exposed port: 5432)
-# - pgAdmin4: pgAdmin4 (exposed port: 8000)
+# - pgadmin: pgAdmin4 (exposed port: 8000)
 # - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
 # - elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
 
@@ -40,6 +40,21 @@ services:
       - network.host=0.0.0.0
       - ELASTIC_PASSWORD=mysecretpassword123**
 
+  # Elasticsearch
+  eslasticsearch-noauth:
+    container_name: eslasticsearch-noauth
+    image: elasticsearch:7.16.1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - mydevnetwork
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+
   # Postgres
   postgres:
     container_name: postgres
@@ -55,8 +70,8 @@ services:
       - mydevnetwork
 
   # pgAdmin4
-  pgAdmin4:
-    container_name: pgAdmin4
+  pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4
     ports:
       - "8000:80"
