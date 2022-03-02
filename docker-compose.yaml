@@ -5,6 +5,9 @@ version: "3.8"
 # - pgadmin: pgAdmin4 (exposed port: 8000)
 # - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
 # - elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
+# - elasticsearch-noauth: Elasticsearch (exposed ports: 9200, 9300)
+# - fluentbit: FluentD (exposed ports: 24224)
+# - fluentd: FluentBit (exposed ports: 24224)
 
 services:
 
@@ -96,6 +99,16 @@ services:
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=mysecretpassword123**
 
+  kibana-es-noauth:
+    container_name: kibana-es-noauth
+    image: kibana:7.16.1
+    ports:
+      - "5601:5601"
+    networks:
+      - mydevnetwork
+    environment:
+      - ELASTICSEARCH_HOSTS=http://eslasticsearch-noauth:9200
+
   # RabbitMQ
   rabbitmq:
     container_name: rabbitmq
@@ -112,6 +125,33 @@ services:
     networks:
       - mydevnetwork
 
+  # Fluenbit
+  fluentbit:
+    container_name: fluentbit
+    image: fluent/fluent-bit
+    restart: "unless-stopped"
+    ports:
+      - "24224:24224"
+    volumes:
+      - ./fluent-bit/etc:/fluent-bit/etc/  # config
+    networks:
+      - mydevnetwork
+
+  # Fluend
+  fluentd:
+    container_name: fluentd
+    image: fluent/fluentd
+    restart: "unless-stopped"
+    ports:
+      - "24224:24224"
+    environment:
+      RABBITMQ_DEFAULT_USER: mydevuser
+      RABBITMQ_DEFAULT_PASS: mysecretpassword123**
+    volumes:
+      - fluentd:/fluentd/log
+      - ./fluentd/etc:/fluentd/etc  # config
+    networks:
+      - mydevnetwork
 
 volumes:
   mongodb:
@@ -119,6 +159,7 @@ volumes:
   postgres:
   pgadmin:
   rabbitmq:
+  fluentd:
 
 
 networks:
