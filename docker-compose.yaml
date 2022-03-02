@@ -1,4 +1,3 @@
-version: "3.8"
 # Following services are included:
 # - mongodb: MongoDB (exposed port: 27017)
 # - postgres: PostgresSQL (exposed port: 5432)
@@ -8,6 +7,10 @@ version: "3.8"
 # - elasticsearch-noauth: Elasticsearch (exposed ports: 9200, 9300)
 # - fluentbit: FluentD (exposed ports: 24224)
 # - fluentd: FluentBit (exposed ports: 24224)
+
+
+version: "3.8"
+
 
 services:
 
