@@ -24,10 +24,15 @@
 - name: elasticsearch-noauth
 - exposed ports: 9200, 9300
 
+### **Fluentbit**
+- name: fluentbit
+- exposed ports: 24224
+- config file: ./fluentd-bit/etc/fluent-bit.conf
+
 ### **Fluentd**
 - name: fluentd
 - exposed ports: 24224
-- config file: ./fluentd/etc
+- config file: ./fluentd/etc/fluentd.conf
 
 
 <br><br>
