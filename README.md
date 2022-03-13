@@ -4,6 +4,10 @@
 - name: mongodb
 - exposed port: 27017
 
+### **ArangoDB**
+- name: arangodb
+- exposed port: 8529
+
 ### **PostgresSQL**
 - name: postgres
 - exposed port: 5432

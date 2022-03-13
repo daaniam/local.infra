@@ -1,5 +1,6 @@
 # Following services are included:
 # - mongodb: MongoDB (exposed port: 27017)
+# - arangodb: ArangoDB (exposed port: 8529)
 # - postgres: PostgresSQL (exposed port: 5432)
 # - pgadmin: pgAdmin4 (exposed port: 8000)
 # - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
@@ -26,6 +27,21 @@ services:
       - mongodb:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mydevuser
+      - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword123**
+
+  # ArangoDB
+  arangodb:
+    platform: linux/x86_64/v8
+    container_name: arangodb
+    image: arangodb:3.8
+    ports:
+      - "8529:8529"
+    networks:
+      - mydevnetwork
+    volumes:
+      - arangodb:/var/lib/arangodb3
+    environment:
+      - ARANGO_NO_AUTH=1
       - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword123**
 
   # Elasticsearch
@@ -158,6 +174,7 @@ services:
 
 volumes:
   mongodb:
+  arangodb:
   elasticsearch:
   postgres:
   pgadmin:
