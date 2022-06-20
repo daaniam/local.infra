@@ -34,6 +34,7 @@ services:
     platform: linux/x86_64/v8
     container_name: arangodb
     image: arangodb:3.8
+    restart: "unless-stopped"
     ports:
       - "8529:8529"
     networks:
