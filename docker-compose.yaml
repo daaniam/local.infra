@@ -1,8 +1,9 @@
 # Following services are included:
 # - mongodb: MongoDB (exposed port: 27017)
 # - arangodb: ArangoDB (exposed port: 8529)
-# - postgres: PostgresSQL (exposed port: 5432)
-# - pgadmin: pgAdmin4 (exposed port: 8000)
+# - postgres14: PostgresSQL (exposed port: 5432)
+# - postgres12: PostgresSQL (exposed port: 5433)
+# - pgadmin4: pgAdmin4 (exposed port: 9901)
 # - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
 # - elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
 # - elasticsearch-noauth: Elasticsearch (exposed ports: 9200, 9300)
@@ -78,9 +79,9 @@ services:
       - discovery.type=single-node
       - network.host=0.0.0.0
 
-  # Postgres
-  postgres:
-    container_name: postgres
+  # Postgres14
+  postgres14:
+    container_name: postgres14
     image: postgres:14
     ports:
       - "5432:5432"
@@ -88,16 +89,31 @@ services:
       POSTGRES_USER: mydevuser
       POSTGRES_PASSWORD: mysecretpassword123**
     volumes:
-      - postgres:/data/postgres
+      - postgres14:/data/postgres
+    networks:
+      - mydevnetwork
+
+  # Postgres12
+  postgres12:
+    container_name: postgres12
+    image: postgres:12
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: mydevuser
+      POSTGRES_PASSWORD: mysecretpassword123**
+    volumes:
+      - postgres12:/data/postgres
     networks:
       - mydevnetwork
 
   # pgAdmin4
-  pgadmin:
+  pgadmin4:
     container_name: pgadmin
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
+    restart: "unless-stopped"
     ports:
-      - "8000:80"
+      - "9901:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: mydevuser@domain.com
       PGADMIN_DEFAULT_PASSWORD: mysecretpassword123**
@@ -177,7 +193,8 @@ volumes:
   mongodb:
   arangodb:
   elasticsearch:
-  postgres:
+  postgres14:
+  postgres12:
   pgadmin:
   rabbitmq:
   fluentd:
