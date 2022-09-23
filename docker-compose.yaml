@@ -177,7 +177,7 @@ services:
     networks:
       - mydevnetwork
 
-  # Fluenbit
+  # Fluentbit
   fluentbit:
     container_name: fluentbit
     image: fluent/fluent-bit
@@ -189,18 +189,15 @@ services:
     networks:
       - mydevnetwork
 
-  # Fluend
+  # Fluentd
   fluentd:
     container_name: fluentd
     image: fluent/fluentd
     restart: "unless-stopped"
     ports:
       - "24224:24224"
-    environment:
-      RABBITMQ_DEFAULT_USER: mydevuser
-      RABBITMQ_DEFAULT_PASS: mysecretpassword123**
+      - "24224:24224/udp"
     volumes:
-      - fluentd:/fluentd/log
       - ./fluentd/etc:/fluentd/etc  # config
     networks:
       - mydevnetwork
