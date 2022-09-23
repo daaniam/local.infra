@@ -1,48 +1,16 @@
-# Following services are included:
+**Following services are included:**
+- mongodb: MongoDB (exposed port: 27017)
+- arangodb: ArangoDB (exposed port: 8529)
+- postgres14: PostgresSQL (exposed port: 5432)
+- postgres12: PostgresSQL (exposed port: 5433)
+- TimescaleDB: TimescaleDB (exposed port: 5434)
+- pgadmin4: pgAdmin4 (exposed port: 9901)
+- rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
+- elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
+- elasticsearch-noauth: Elasticsearch (exposed ports: 9200, 9300)
+- fluentbit: FluentD (exposed ports: 24224)
+- fluentd: FluentBit (exposed ports: 24224)
 
-### **MongoDB**
-- name: mongodb
-- exposed port: 27017
-
-### **ArangoDB**
-- name: arangodb
-- exposed port: 8529
-
-### **PostgresSQL**
-- name: postgres
-- exposed port: 5432
-
-### **pgAdmin4**
-- name: pgadmin
-- exposed port: 8000
-
-### **RabbitMQ**
-- name: rabbitmq
-- exposed ports: 5672, 15672
-
-### **Elasticsearch**
-- name: elasticsearch
-- exposed ports: 9200, 9300
-
-### **Elasticsearch (no auth)**
-- name: elasticsearch-noauth
-- exposed ports: 9200, 9300
-
-### **Fluentbit**
-- name: fluentbit
-- exposed ports: 24224
-- config file: ./fluentd-bit/etc/fluent-bit.conf
-
-### **Fluentd**
-- name: fluentd
-- exposed ports: 24224
-- config file: ./fluentd/etc/fluentd.conf
-
-
-<br><br>
-
-# Network
-You have to manually create a docker network first:
-```
-$docker network create mydevnetwork
-```
+**Network**
+- You have to manually create a docker network first:
+`$docker network create mydevnetwork`

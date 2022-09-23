@@ -3,6 +3,7 @@
 # - arangodb: ArangoDB (exposed port: 8529)
 # - postgres14: PostgresSQL (exposed port: 5432)
 # - postgres12: PostgresSQL (exposed port: 5433)
+# - TimescaleDB: TimescaleDB (exposed port: 5434)
 # - pgadmin4: pgAdmin4 (exposed port: 9901)
 # - rabbitmq: RabbitMQ (exposed ports: 5672, 15672)
 # - elasticsearch: Elasticsearch (exposed ports: 9200, 9300)
@@ -10,10 +11,13 @@
 # - fluentbit: FluentD (exposed ports: 24224)
 # - fluentd: FluentBit (exposed ports: 24224)
 
+# Network
+# You have to manually create a docker network first:
+# " $docker network create mydevnetwork "
+
+
 
 version: "3.8"
-
-
 services:
 
   # MongoDB
@@ -122,6 +126,18 @@ services:
     networks:
       - mydevnetwork
 
+  # TimescaleDB
+  timescaledb:
+    image: timescale/timescaledb-ha:pg14-latest
+    container_name: timescaledb
+    restart: "unless-stopped"
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - timescaledb:/var/lib/postgresql/data
+
   # Kibana
   kibana:
     container_name: kibana
@@ -195,10 +211,10 @@ volumes:
   elasticsearch:
   postgres14:
   postgres12:
+  timescaledb:
   pgadmin:
   rabbitmq:
   fluentd:
-
 
 networks:
  mydevnetwork:
